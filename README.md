@@ -2,6 +2,49 @@
 
 This repository provides authoritative rules for AI-assisted development (Cursor, Claude Code, and similar agents). Rules are **mandatory and non-negotiable** when active: not suggestions to approximate. When a rule is ambiguous, work stops until a human clarifies—never proceed on a best guess.
 
+## What each file does (start here)
+
+Root-level `.md` files fall into two categories: **rules** (agents must follow) and **documentation** (humans read to understand the repo).
+
+### Rules files — give these to your AI agent
+
+| File | Stack | What it is |
+|------|-------|------------|
+| [CLAUDE.md](./CLAUDE.md) | **Node.js fullstack** | Full single-file rules: Docker Compose, Express, React, Prisma, prescribed `apps/api` + `apps/web` monorepo. |
+| [GENERAL_CLAUDE.md](./GENERAL_CLAUDE.md) | **Any language / framework** | Full single-file rules: project discovery, generic deploy, multi-language. Use when you want one complete reference file. |
+| [GENERAL_CLAUDE_CORE.md](./GENERAL_CLAUDE_CORE.md) | **Any language / framework** | Slim **always-on** rules (~315 lines). Pair with [`.cursor/rules/`](./.cursor/rules/) for the recommended Cursor setup. |
+
+**How to tell:** Rules files open with **AUTHORITY LEVEL: ABSOLUTE**, Prime Directives, and a Correction Log. This README is not a rules file — agents follow the files above, not this guide alone.
+
+**Also rules (not at root):** [`.cursor/rules/*.mdc`](./.cursor/rules/) — 20 scoped Cursor rules. `core.mdc` loads every session; others load when you edit matching files (e.g. `Dockerfile`, `*.py`, routes).
+
+### Documentation files — for humans
+
+| File | Purpose |
+|------|---------|
+| **README.md** (this file) | Overview, file guide, install steps, section summaries. |
+| [RULES_SPLIT.md](./RULES_SPLIT.md) | Why and how the core + scoped split works; maintenance mapping. |
+
+### Which rules should I use?
+
+| Your project | Copy into the project |
+|--------------|----------------------|
+| Generic / polyglot (Python, Go, Terraform, mixed, etc.) | `GENERAL_CLAUDE_CORE.md` + `.cursor/rules/` — optionally `GENERAL_CLAUDE.md` |
+| Node fullstack matching the CLAUDE scaffold | `CLAUDE.md` |
+| Non-Cursor agent, one file only | `GENERAL_CLAUDE.md` or `CLAUDE.md` |
+
+**Choose one rules system per project.** Do not load `CLAUDE.md` and `GENERAL_CLAUDE.md` together unless a CORRECTION ENTRY explicitly permits it.
+
+```
+Documentation (read first)          Rules (install in your project)
+  README.md  ───────────────►       CLAUDE.md              (Node, single file)
+  RULES_SPLIT.md                    GENERAL_CLAUDE.md      (generic, single file)
+                                    GENERAL_CLAUDE_CORE.md (generic, always-on)
+                                    .cursor/rules/*.mdc    (generic, scoped detail)
+```
+
+---
+
 ## Repository layout
 
 ```
@@ -28,13 +71,11 @@ claude/
 
 On conflict: **Core > scoped rule > GENERAL_CLAUDE.md examples**.
 
-| File | Use when |
-|------|----------|
+| Approach | Use when |
+|----------|----------|
 | **Split pack** (`GENERAL_CLAUDE_CORE.md` + `.cursor/rules/`) | **Recommended** for generic/polyglot projects in Cursor |
-| [GENERAL_CLAUDE.md](./GENERAL_CLAUDE.md) | Full single-file reference, or non-Cursor agents |
-| [CLAUDE.md](./CLAUDE.md) | Enterprise Node.js fullstack (Compose, Express, React, Prisma) |
-
-**Choose one rules system per project.** Do not load `GENERAL_CLAUDE.md` and `CLAUDE.md` together unless a CORRECTION ENTRY explicitly permits it.
+| [GENERAL_CLAUDE.md](./GENERAL_CLAUDE.md) alone | Full single-file reference, or non-Cursor agents |
+| [CLAUDE.md](./CLAUDE.md) alone | Enterprise Node.js fullstack (Compose, Express, React, Prisma) |
 
 This README explains what each layer requires and **how to install the split pack in a generic project**. For literal rule text, see [GENERAL_CLAUDE.md](./GENERAL_CLAUDE.md) or [GENERAL_CLAUDE_CORE.md](./GENERAL_CLAUDE_CORE.md). For split design rationale, see [RULES_SPLIT.md](./RULES_SPLIT.md).
 
@@ -42,38 +83,39 @@ This README explains what each layer requires and **how to install the split pac
 
 ## Table of Contents
 
-1. [Glossary](#glossary)
-2. [Using Split Rules in a Generic Project](#using-split-rules-in-a-generic-project)
-3. [Scoped Rules Reference](#scoped-rules-reference)
-4. [Choosing a Rules File](#choosing-a-rules-file)
-5. [How to Use This Document](#how-to-use-this-document)
-6. [Authority and Enforcement](#authority-and-enforcement)
-7. [Prime Directives](#prime-directives)
-8. [Clarification Protocol](#clarification-protocol)
-9. [Correction & Memory Protocol](#correction--memory-protocol)
-10. [Deployment Configuration Protocol](#deployment-configuration-protocol)
-11. [Design System & Color Tokens](#design-system--color-tokens)
-12. [Project Structure](#project-structure)
-13. [Runtime Model](#runtime-model)
-14. [Authentication & Security](#authentication--security)
-15. [RBAC](#rbac)
-16. [Security Headers, Input Security & Rate Limiting](#security-headers-input-security--rate-limiting)
-17. [Architecture Rules](#architecture-rules)
-18. [Optional Modules](#optional-modules)
-19. [Language & Type Safety Rules](#language--type-safety-rules)
-20. [Database Rules](#database-rules)
-21. [API Design Rules](#api-design-rules)
-22. [Frontend Rules](#frontend-rules)
-23. [Container & Infrastructure Rules](#container--infrastructure-rules)
-24. [Testing Rules](#testing-rules)
-25. [CI/CD](#cicd)
-26. [Environment Variables](#environment-variables)
-27. [Code Quality](#code-quality)
-28. [Documentation Rules](#documentation-rules)
-29. [Security Checklist](#security-checklist)
-30. [Correction Log](#correction-log)
-31. [Related Documentation](#related-documentation)
-32. [Rules Split Architecture](#rules-split-architecture)
+1. [What each file does (start here)](#what-each-file-does-start-here)
+2. [Glossary](#glossary)
+3. [Using Split Rules in a Generic Project](#using-split-rules-in-a-generic-project)
+4. [Scoped Rules Reference](#scoped-rules-reference)
+5. [Choosing a Rules File](#choosing-a-rules-file)
+6. [How to Use This Document](#how-to-use-this-document)
+7. [Authority and Enforcement](#authority-and-enforcement)
+8. [Prime Directives](#prime-directives)
+9. [Clarification Protocol](#clarification-protocol)
+10. [Correction & Memory Protocol](#correction--memory-protocol)
+11. [Deployment Configuration Protocol](#deployment-configuration-protocol)
+12. [Design System & Color Tokens](#design-system--color-tokens)
+13. [Project Structure](#project-structure)
+14. [Runtime Model](#runtime-model)
+15. [Authentication & Security](#authentication--security)
+16. [RBAC](#rbac)
+17. [Security Headers, Input Security & Rate Limiting](#security-headers-input-security--rate-limiting)
+18. [Architecture Rules](#architecture-rules)
+19. [Optional Modules](#optional-modules)
+20. [Language & Type Safety Rules](#language--type-safety-rules)
+21. [Database Rules](#database-rules)
+22. [API Design Rules](#api-design-rules)
+23. [Frontend Rules](#frontend-rules)
+24. [Container & Infrastructure Rules](#container--infrastructure-rules)
+25. [Testing Rules](#testing-rules)
+26. [CI/CD](#cicd)
+27. [Environment Variables](#environment-variables)
+28. [Code Quality](#code-quality)
+29. [Documentation Rules](#documentation-rules)
+30. [Security Checklist](#security-checklist)
+31. [Correction Log](#correction-log)
+32. [Related Documentation](#related-documentation)
+33. [Rules Split Architecture](#rules-split-architecture)
 
 ---
 
